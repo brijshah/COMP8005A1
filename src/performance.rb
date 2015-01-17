@@ -1,5 +1,26 @@
 #!/usr/bin/ruby
 
+#-----------------------------------------------------------------------------
+#-- SOURCE FILE:    main.rb - Process vs. Thread Comparison
+#--
+#-- PROGRAM:        Process vs Thread Application
+#--
+#-- FUNCTIONS:      
+#--                 def prime_factors(i)
+#--                 def startProcesses
+#--                 def startThreads
+#--                 def getCmd
+#--
+#-- DATE:           January 17, 2015
+#--
+#--
+#-- DESIGNERS:      Brij Shah
+#--
+#-- PROGRAMMERS:    Brij Shah
+#--
+#-- NOTES:
+#----------------------------------------------------------------------------*/
+
 require 'benchmark'
 require 'logger'
 require 'thread'
