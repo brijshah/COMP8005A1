@@ -61,7 +61,10 @@ def getCmd
 			exit
 		when "b"
 			puts 'running ruby benchmark'
-			#implement ruby benchmark
+			@log2.info 'started Process vs Thread benchmark test'
+			@log2.info "Process ++ #{Benchmark.measure{startProcesses}}\n"
+			@log2.info "Thread++ #{Benchmark.measure{startThreads}}\n"
+			@log2.info 'completed ruby benchmark'
 			exit
 		when "exit"
 			exit
