@@ -7,6 +7,7 @@
 #--
 #-- FUNCTIONS:      
 #--                 def prime_factors(i)
+#--					def range
 #--                 def startProcesses
 #--                 def startThreads
 #--                 def getCmd
@@ -48,12 +49,35 @@ require 'thread'
 #-- PROGRAMMERS:    Rosetta Code
 #--
 #-- NOTES:
-#-- This function returns am array(or collection) which contains the prime
-#-- decomposition of a given number, n, greater than 1.
+#-- This function returns an array(or collection) which contains the prime
+#-- decomposition of a given number, n, greater than 1. The code for prime
+#-- factors was obtained from: http://rosettacode.org/wiki/Prime_decomposition
 #----------------------------------------------------------------------------*/
 def prime_factors(i)
     v = (2..i-1).detect{|j| i % j == 0}
     v ? ([v] + prime_factors(i/v)) : [i]
+end
+
+#-----------------------------------------------------------------------------
+#-- FUNCTION:       def range    
+#--
+#-- DATE:           January 17, 2015
+#--
+#-- DESIGNERS:      Brij Shah
+#--
+#-- PROGRAMMERS:    Brij Shah
+#--
+#-- NOTES:
+#-- This function prompts user for a desired range of numbers. The numbers are
+#-- then passed to the startProcesses and startThreads functions
+#----------------------------------------------------------------------------*/
+def range
+	puts "Enter numerical range(seperated by a space): "
+	full_range = gets.chomp		
+	var = full_range.split(' ')
+
+	@rangeStart = var.first.to_i
+	@rangeEnd = var.last.to_i
 end
 
 #-----------------------------------------------------------------------------
@@ -77,7 +101,7 @@ def startProcesses
 	processes = (1..@DEFAULT_WORKERS).map do |p|
 		Process.fork do
 			@log.info "pid:#{Process.pid} began"
-            	for j in 0..1000
+            	for j in @rangeStart..@rangeEnd
                 	@log.info "pid:#{Process.pid} #{j}: #{prime_factors(j)}"
             	end
 			@log.info "pid:#{Process.pid} completed"
@@ -108,7 +132,7 @@ def startThreads
 	threads = (1..@DEFAULT_WORKERS).map do |t|
 		Thread.new(t) do |t|
 			@log.info "#{Thread.current} began"
-				for k in 0..1000
+				for k in @rangeStart..@rangeEnd
 					@log.info "#{Thread.current} #{k}: #{prime_factors(k)}"
 				end
 			@log.info "#{Thread.current} complete"
@@ -140,18 +164,21 @@ def getCmd
 		cmd = gets.chomp.strip.downcase
 		case cmd
 		when "p"
+			range
 			startProcesses
 			puts "spawning processes.."
 			exit
 		when "t"
+			range
 			startThreads
 			puts "spawning Threads.."
 			exit
 		when "b"
+			range
 			puts 'running ruby benchmark'
 			@log2.info 'started Process vs Thread benchmark test'
-			@log2.info "Process ++ #{Benchmark.measure{startProcesses}}\n"
-			@log2.info "Thread++ #{Benchmark.measure{startThreads}}\n"
+			@log2.info "Process ++ #{Benchmark.measure{startProcesses}}"
+			@log2.info "Thread++ #{Benchmark.measure{startThreads}}"
 			@log2.info 'completed ruby benchmark'
 			exit
 		when "exit"
@@ -164,5 +191,8 @@ def getCmd
 	end
 end
 
+#-----------------------------------------------------------------------------
+#-- MAIN
+#----------------------------------------------------------------------------*/
 puts "Enter command: "
 getCmd
